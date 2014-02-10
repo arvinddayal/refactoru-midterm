@@ -1,5 +1,7 @@
 $(function(){
 
+	var allAppts = [];
+
 	/**
 	 * Creates new Date
 	 * @return {String} [Date in HH:MM AM/PM]
@@ -43,6 +45,19 @@ $(function(){
     pushDate();
 
 
+    //Clicking on + Icon Toggles Appt. Form
+    $('#add-button').click(function(){
+		$('#appt-form').toggle('display');
+    });
+
+    //Clicking Submit Button stores info in ___, clears form
+    $('#submit-appt').click(function(e){
+		e.preventDefault();
+		var x =$(this).parent().serializeArray();
+		$(this).prev('input').val("");
+		$(this).prev().prev('input').val("");
+		allAppts.push(x);
+    });
 
 
 

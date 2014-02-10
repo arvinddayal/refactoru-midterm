@@ -1,3 +1,16 @@
 header, h3 {
 	text-align: center;
 }
+
+.calendar-bar {
+	height: 350px;
+	overflow: scroll;
+}
+
+.add-button {
+	display: inline-block;
+}
+
+.appt-form {
+	display: none;
+}
