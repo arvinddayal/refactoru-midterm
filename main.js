@@ -1,42 +1,16 @@
 $(function(){
 
 	var allAppts = [];
-	var d = new Date();
+	var date = new Date();
 	var counter = 0;
 	
-
-
-	/* takes a single date option
-		and returns a string representation with
-		the format of thursday, MM/DD/YYYY
-	*/
-	var buildDateStr = function(){
-		var options = {weekday: "long", year: "numeric", month: "numeric", day: "numeric"};
-
-		return d.toLocaleString("en-US", options);
+	//returns a string representation with
+	//the format of thursday, MM/DD/YYYY
+	var currentDayStr = function(date){
+		return moment().format("dddd, MMMM Do YYYY");
+		// return date.toDateString();
 	};
 
-
-	//Returns an array of new dates
-	var getFutureDateArray = function(d, len){
-		var ary = [];
-		var date = d;
-
-		for(var i = 0; i < len; i++){
-			ary.push(buildDateStr(date));
-			date.setDate(date.getDate() + 1);
-		}
-
-		return ary;
-	};
-
-	//Creates new LIs with date from getFutureDate
-	var newDay = function() {
-		for (var i = 0; i < 7; i++) {
-			var newLi = $('<li id="date"></li>').append(getFutureDateArray(d, i));
-			$('#calendar').append(newLi);
-		}
-	};
 
 	/**
 	 * Creates new Time
@@ -44,7 +18,7 @@ $(function(){
 	 */
 	var makeTime = function() {
 
-		var hours = d.getHours();
+		var hours = date.getHours();
 		if (hours > 12) {
 			hours = (hours - 12);
 			ampm = "PM";
@@ -53,7 +27,7 @@ $(function(){
 			hours = hours;
 			ampm = "AM";
 		}
-		var mins = d.getMinutes();
+		var mins = date.getMinutes();
 		if (mins < 10) {
 			mins = "0" + mins;
 		}
@@ -74,13 +48,33 @@ $(function(){
 
 
     //Creates new date div
-    var newDate = function() {
-		var newDiv = $('<div class="new-day">');
-		var newDateHolder = $('<h4 class="date" id="date"></h4>');
-		var newDayDiv = newDiv.append(newDateHolder);
+    var newDate = function(date) {
+		var dayStr = date.toDateString();
+		var newDiv = $('<div class="new-day" data-date="{0}"></div>'.supplant([moment(dayStr).format("MM/DD/YYYY")]));
+		var newDateHolder = $('<h4 class="date" id="date">{0}</h4>'.supplant([dayStr]));
+		var newDay = newDiv.append(newDateHolder);
+		$('#calendar').append(newDay);
     };
 
 
+    var createTwoWeek = function() {
+		for (var i = 0; i < 14; i++) {
+			var date = new Date();
+			date.setDate(date.getDate() + i);
+			newDate(date);
+		}
+    };
+
+  //   var createTwoDay = function(date) {
+		// for (var i = 0; i < 2; i++) {
+		// 	var date = new Date();
+		// 	date.setDate(date.getDate() + i);
+		// 	newDate(date);
+		// }
+  //   };
+
+
+    
 
     //end variables
 
@@ -94,7 +88,7 @@ $(function(){
 
     //Pushes date into time-bar div
     pushDate();
-
+	createTwoWeek();
 
     //Clicking on + Icon Toggles Appt. Form
     $('#add-button').click(function(){
@@ -121,6 +115,31 @@ $(function(){
     $(document).on('click', "#delete-button", function(){
 		$(this).parent().parent('ul').remove();
     });
+
+    //Infinite scroll for calendar, adds new days
+	$('#calendar-bar').on('scroll', function scrollHandler() {
+		var distanceFromBottom = $('#calendar-bar').height() - $('#calendar-bar').scrollTop() - $('#calendar-bar').height();
+		if(distanceFromBottom < $('#calendar-bar').height()) {
+		var x = $('div.new-day:last').data('date');
+		console.log(x);
+		y = (new Date(x));
+		y.setDate(y.getDate()+1);
+		newDate(y);
+		}
+	});
+
+	
+
+
+
+
+
+
+
+
+
+
+
 
 
 });
