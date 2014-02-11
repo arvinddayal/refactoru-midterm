@@ -1,4 +1,4 @@
-header, h3 {
+header, h3, h4 {
 	text-align: center;
 }
 
@@ -8,9 +8,16 @@ header, h3 {
 }
 
 .add-button {
-	display: inline-block;
+	float: right;
 }
 
 .appt-form {
 	display: none;
+}
+.new-day > ul {
+	display: none;
+}
+
+.new-day > ul> li {
+	display: inline-block;
 }

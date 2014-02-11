@@ -35,8 +35,9 @@
 			</div>
 
 			<div class="eight columns calendar-bar" id="calendar-bar">
-				<h3>Calendar   <a href="#"><img class="add-button" id="add-button" src="addbtn.png"></a>
-				</h3>
+				<header class="calendar-header">
+				<h3>Calendar</h3>
+				<a href="#"><img class="add-button" id="add-button" src="addbtn.png"></a>
 				<div class="appt-form" id="appt-form">
 					<form>
 					<input type="text" name="date" id="datebox" placeholder="Date (MM/DD/YYYY)">
@@ -44,10 +45,37 @@
 					<input type="submit" class="submit-appt" id="submit-appt" value="Submit">
 					</form>
 				</div>
+				</header>
 
-				<ul class="calendar" id="calendar">
-
-				</ul>
+				<div class="calendar" id="calendar">
+					<div class="new-day">
+					<h4 class="date" id="date">Date</h4>
+					<ul class="new-appt" id="new-appt">
+						<li>Appointment1</li>
+						<li>
+						<a id="delete-button" href="#">Delete Appt</a>
+						</li>
+					</ul>
+					<ul class="new-appt" id="new-appt">
+						<li>Appointment2</li>
+						<li>
+						<a id="delete-button" href="#">Delete Appt</a>
+						</li>
+					</ul>	
+					<ul class="new-appt" id="new-appt">
+						<li>Appointment3</li>
+						<li>
+						<a id="delete-button" href="#">Delete Appt</a>
+						</li>
+					</ul>
+					<ul class="new-appt" id="new-appt">
+						<li>Appointment4</li>
+						<li>
+						<a id="delete-button" href="#">Delete Appt</a>
+						</li>
+					</ul>														
+					</div>
+				</div>
 			</div>
 
 			<div class="four columns">
