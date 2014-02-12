@@ -1,10 +1,19 @@
 $(function(){
 
-	var allAppts = [];
+	var allAppts = [
+		{
+			date: '02/14/2014',
+			appointment: 'Presentation'
+		},
+		{
+			date: '02/15/2014',
+			appointment: 'Saturaday'
+		}
+	];
 	var allTasks = [];
 	var date = new Date();
-	localStorage["allAppts"] = JSON.stringify(allAppts);
-	var storedAppts = JSON.parse(localStorage["allAppts"]);
+	localStorage['allAppts'] = JSON.stringify(allAppts);
+	var storedAppts = JSON.parse(localStorage['allAppts']);
 	console.log(allAppts);
 	
 	/**
@@ -51,7 +60,7 @@ $(function(){
 		$('#calendar').append(newDay);
     };
 
-
+    //Renders first two weeks in calendar
     var createTwoWeek = function() {
 		for (var i = 0; i < 14; i++) {
 			var date = new Date();
@@ -60,9 +69,10 @@ $(function(){
 		}
     };
 
+    //Creates new appointment UL with appointment info and delete button
     var newAppt = function(allAppts) {
 		var newApptUl = $('<ul class="new appt" id="new-appt></ul>');
-		var newApptLi = $('<li>{0}</li>'.supplant(allAppts['value']));
+		var newApptLi = $('<li>{0}</li>'.supplant([allAppts].appointment));
 		var newDelLi = $('<li><a id="delete-button" href="#">Delete Appt</a></li>');
 		var newApptEl = newApptUl.append(newApptLi, newDelLi);
 		return newApptEl;
@@ -70,14 +80,20 @@ $(function(){
 
     //Searches allAppts Object, pushes k/v pairs into match date
     var addAppts = function(allAppts) {
-		for (var i = 0; i < allAppts.length; i++) {
-			if (allAppts['key']=== $('div.new-day').data('date')) {
+		for (var i = 0; i < [allAppts].length; i++) {
+			if ([allAppts].date=== $('div.new-day').data('date')) {
 				$('div.new-day').append(newAppt);
 			}
 		}
     };
 
-
+    //Get Form Info
+    var getNewAppt = function() {
+		return {
+			date: $('#datebox').val(),
+			appointment: $('#apptbox').val()
+		};
+    };
     
 
     //end variables
@@ -99,7 +115,7 @@ $(function(){
     //Clicking Submit Button stores info in allAppts array, clears form
     $('#submit-appt').click(function(e){
 		e.preventDefault();
-		var x = $(this).parent().serializeArray();
+		var x = getNewAppt();
 		allAppts.push(x);
 		$(this).prev('input').val("");
 		$(this).prev().prev('input').val("");
