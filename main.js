@@ -1,17 +1,12 @@
 $(function(){
 
 	var allAppts = [];
+	var allTasks = [];
 	var date = new Date();
-	var counter = 0;
+	localStorage["allAppts"] = JSON.stringify(allAppts);
+	var storedAppts = JSON.parse(localStorage["allAppts"]);
+	console.log(allAppts);
 	
-	//returns a string representation with
-	//the format of thursday, MM/DD/YYYY
-	var currentDayStr = function(date){
-		return moment().format("dddd, MMMM Do YYYY");
-		// return date.toDateString();
-	};
-
-
 	/**
 	 * Creates new Time
 	 * @return {String} [Time in HH:MM AM/PM]
@@ -65,21 +60,27 @@ $(function(){
 		}
     };
 
-  //   var createTwoDay = function(date) {
-		// for (var i = 0; i < 2; i++) {
-		// 	var date = new Date();
-		// 	date.setDate(date.getDate() + i);
-		// 	newDate(date);
-		// }
-  //   };
+    var newAppt = function(allAppts) {
+		var newApptUl = $('<ul class="new appt" id="new-appt></ul>');
+		var newApptLi = $('<li>{0}</li>'.supplant(allAppts['value']));
+		var newDelLi = $('<li><a id="delete-button" href="#">Delete Appt</a></li>');
+		var newApptEl = newApptUl.append(newApptLi, newDelLi);
+		return newApptEl;
+    };
+
+    //Searches allAppts Object, pushes k/v pairs into match date
+    var addAppts = function(allAppts) {
+		for (var i = 0; i < allAppts.length; i++) {
+			if (allAppts['key']=== $('div.new-day').data('date')) {
+				$('div.new-day').append(newAppt);
+			}
+		}
+    };
 
 
     
 
     //end variables
-
-
-
 
 
 
@@ -103,6 +104,7 @@ $(function(){
 		$(this).prev('input').val("");
 		$(this).prev().prev('input').val("");
 		console.log(allAppts);
+		addAppts();
 		$('#appt-form').toggle('display');
     });
 
@@ -121,7 +123,6 @@ $(function(){
 		var distanceFromBottom = $('#calendar-bar').height() - $('#calendar-bar').scrollTop() - $('#calendar-bar').height();
 		if(distanceFromBottom < $('#calendar-bar').height()) {
 		var x = $('div.new-day:last').data('date');
-		console.log(x);
 		y = (new Date(x));
 		y.setDate(y.getDate()+1);
 		newDate(y);
