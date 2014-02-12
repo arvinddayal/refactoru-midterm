@@ -2,13 +2,13 @@ header, h3, h4 {
 	text-align: center;
 }
 
-.calendar-bar {
-	height: 350px;
-	overflow: scroll;
+h3 {
+	text-decoration: underline;
 }
 
-.add-button {
-	float: right;
+.calendar {
+	height: 350px;
+	overflow: scroll;
 }
 
 .appt-form {
@@ -20,4 +20,9 @@ header, h3, h4 {
 
 .new-day > ul> li {
 	display: inline-block;
+}
+
+.delete-button {
+	float: right;
+	margin-right: 5px;
 }

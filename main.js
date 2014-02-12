@@ -23,7 +23,7 @@ $(function(){
 	 * @return {String} [Time in HH:MM AM/PM]
 	 */
 	var makeTime = function() {
-
+		date = new Date();
 		var hours = date.getHours();
 		if (hours > 12) {
 			hours = (hours - 12);
@@ -47,11 +47,10 @@ $(function(){
 	 */
     var pushDate = function(){
 		var x = function() {
-			$("#time-bar").text(makeTime);
+			$("#time-bar").text(makeTime());
 		};
-		setInterval(x, 1000);
+		setInterval(x,1000);
     };
-
 
     //Creates new date div
     var newDate = function(date) {
@@ -75,7 +74,7 @@ $(function(){
     var newAppt = function(apptInst) {
 		var newApptUl = $('<ul class="new appt" id="new-appt"></ul>');
 		var newApptLi = $('<li>{0}</li>'.supplant([apptInst]));
-		var newDelLi = $('<li><a id="delete-button" href="#">Delete Appt</a></li>');
+		var newDelLi = $('<li class="delete-button"><a id="delete-button" href="#">Delete Appt</a></li>');
 		var newApptEl = newApptUl.append(newApptLi, newDelLi);
 		return newApptEl;
     };
@@ -99,6 +98,15 @@ $(function(){
 		};
     };
     
+    //Archive appointments
+    var archiveAppt = function(apptText) {
+		for (var i = 0; i < allAppts.length; i++) {
+			if (allAppts[i].appointment == apptText) {
+				allAppts[i].date = "archived"+allAppts[i].date;
+				console.log(allAppts[i].date);
+			}
+		}
+    };
 
     //end variables
 
@@ -116,7 +124,7 @@ $(function(){
 		$('#appt-form').toggle('display');
     });
 
-    //Clicking Submit Button stores info in allAppts array, clears form
+    //Clicking Submit Button stores info in allAppts array, clears form, updates DOM
     $('#submit-appt').click(function(e){
 		e.preventDefault();
 		var x = getNewAppt();
@@ -132,20 +140,23 @@ $(function(){
 		$(this).nextAll('ul').toggle('display');
     });
 
-    //Clicking "delete" removes LIs and ULs
+    //Clicking "delete" removes appointment UL/LI
     $(document).on('click', "#delete-button", function(){
+		var apptText = $(this).parent().prev().text();
+		archiveAppt(apptText);
 		$(this).parent().parent('ul').remove();
     });
 
-    //Infinite scroll for calendar, adds new days
-	$('#calendar-bar').on('scroll', function scrollHandler() {
-		var distanceFromBottom = $('#calendar-bar').height() - $('#calendar-bar').scrollTop() - $('#calendar-bar').height();
-		if(distanceFromBottom < $('#calendar-bar').height()) {
+    //Infinite scroll for calendar, adds new days, updates DOM with 
+	$('#calendar').on('scroll', function scrollHandler() {
+		var distanceFromBottom = $('#calendar').height() - $('#calendar').scrollTop() - $('#calendar').height();
+		if(distanceFromBottom < $('#calendar').height()) {
 		var x = $('div.new-day:last').data('date');
 		y = (new Date(x));
 		y.setDate(y.getDate()+1);
 		newDate(y);
 		}
+		addAppts(allAppts);
 	});
 
 	
