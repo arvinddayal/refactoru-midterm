@@ -10,11 +10,13 @@ $(function(){
 			appointment: 'Saturday'
 		}
 	];
+
 	var allTasks = [];
+
 	var date = new Date();
+
 	localStorage['allAppts'] = JSON.stringify(allAppts);
 	var storedAppts = JSON.parse(localStorage['allAppts']);
-	console.log(allAppts);
 	
 	/**
 	 * Creates new Time
@@ -71,7 +73,6 @@ $(function(){
 
     //Creates new appointment UL with appointment info and delete button
     var newAppt = function(apptInst) {
-		console.log(apptInst);
 		var newApptUl = $('<ul class="new appt" id="new-appt"></ul>');
 		var newApptLi = $('<li>{0}</li>'.supplant([apptInst]));
 		var newDelLi = $('<li><a id="delete-button" href="#">Delete Appt</a></li>');
@@ -81,6 +82,7 @@ $(function(){
 
     //Searches allAppts Object, pushes k/v pairs into match date
     var addAppts = function(allAppts) {
+		$('ul').remove();
 		for (var i = 0; i < allAppts.length; i++) {
 			var apptInst = allAppts[i].appointment;
 			if (allAppts[i].date == $('.calendar').find("[data-date='" + allAppts[i].date + "']")); {
