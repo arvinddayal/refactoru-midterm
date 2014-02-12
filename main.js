@@ -53,7 +53,7 @@ $(function(){
 
     //Creates new date div
     var newDate = function(date) {
-		var dayStr = date.toDateString();
+		var dayStr= date.toDateString();
 		var newDiv = $('<div class="new-day" data-date="{0}"></div>'.supplant([moment(dayStr).format("MM/DD/YYYY")]));
 		var newDateHolder = $('<h4 class="date" id="date">{0}</h4>'.supplant([dayStr]));
 		var newDay = newDiv.append(newDateHolder);
@@ -70,20 +70,21 @@ $(function(){
     };
 
     //Creates new appointment UL with appointment info and delete button
-    var newAppt = function(allAppts) {
-		var newApptUl = $('<ul class="new appt" id="new-appt">Hello</ul>');
-		// var newApptLi = $('<li>{0}</li>'.supplant(allAppts[i].appointment));
+    var newAppt = function(apptInst) {
+		console.log(apptInst);
+		var newApptUl = $('<ul class="new appt" id="new-appt"></ul>');
+		var newApptLi = $('<li>{0}</li>'.supplant([apptInst]));
 		var newDelLi = $('<li><a id="delete-button" href="#">Delete Appt</a></li>');
-		// // var newApptEl = newApptUl.append(newApptLi, newDelLi);
-		var newApptEl = newApptUl.append(newDelLi);
+		var newApptEl = newApptUl.append(newApptLi, newDelLi);
 		return newApptEl;
     };
 
     //Searches allAppts Object, pushes k/v pairs into match date
     var addAppts = function(allAppts) {
 		for (var i = 0; i < allAppts.length; i++) {
+			var apptInst = allAppts[i].appointment;
 			if (allAppts[i].date == $('.calendar').find("[data-date='" + allAppts[i].date + "']")); {
-				$('.calendar').find("[data-date='" + allAppts[i].date + "']").append(newAppt);
+				$('.calendar').find("[data-date='" + allAppts[i].date + "']").append(newAppt(apptInst));
 			}
 		}
     };
