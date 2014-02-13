@@ -1,5 +1,18 @@
 $(function(){
 
+	var date = new Date();
+
+	var save = function () {
+		localStorage.setItem('allAppts', JSON.stringify(allAppts));
+		localStorage.setItem('allTasks', JSON.stringify(allTasks));
+	};
+
+	var restoreInfo = function() {
+		JSON.parse(localStorage.getItem('allAppts'));
+		JSON.parse(localStorage.getItem('allTasks'));
+	};
+
+
 	var allAppts = [
 		{
 			date: '02/14/2014',
@@ -17,11 +30,6 @@ $(function(){
 		}
 	];
 
-	var date = new Date();
-
-	localStorage['allAppts'] = JSON.stringify(allAppts);
-	var storedAppts = JSON.parse(localStorage['allAppts']);
-	
 	/**
 	 * Creates new Time
 	 * @return {String} [Time in HH:MM AM/PM]
@@ -55,6 +63,35 @@ $(function(){
 		};
 		setInterval(x,1000);
     };
+
+    //Weather Info JS Starts Here
+    var loc = '80303';
+    var u = 'f';
+ 
+    var query = "SELECT item.condition FROM weather.forecast WHERE location='" + loc + "' AND u='" + u + "'";
+    var cacheBuster = Math.floor((new Date().getTime()) / 1200 / 1000);
+    var url = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(query) + '&format=json&_nocache=' + cacheBuster;
+ 
+    window['wxCallback'] = function(data) {
+        var info = data.query.results.channel.item.condition;
+        $('.wxIcon').css({
+            backgroundPosition: '-' + (61 * info.code) + 'px 0'
+        }).attr({
+            title: info.text
+        });
+        $('.wxIcon2').append('<img src="http://l.yimg.com/a/i/us/we/52/' + info.code + '.gif" width="34" height="34" title="' + info.text + '" />');
+        $('.wxTemp').html(info.temp + '&deg;' + (u.toUpperCase()));
+    };
+ 
+    $.ajax({
+        url: url,
+        dataType: 'jsonp',
+        cache: true,
+        jsonpCallback: 'wxCallback'
+    });
+    //Weather Info JS Ends Here
+
+
 
     //Creates new date div
     var newDate = function(date) {
@@ -212,7 +249,8 @@ $(function(){
 
 
     //Functions
-
+    //Retrieve local storage
+    restoreInfo();
     //Pushes date into time-bar div
     pushDate();
 	//Populates first two weeks with any stored appts
@@ -243,7 +281,11 @@ $(function(){
 		$('.archived-appts').toggle('display');
 		showArchivedAppts(allAppts);
     });
-
+    
+    //Clicking on date toggles display of appointments
+    $(document).on('click', "#date", function(){
+		$(this).nextAll('ul').toggle('display');
+    });
 
     //Clicking Form Submit Button stores info in allAppts array, clears form, updates DOM
     $('#submit-appt').click(function(e){
@@ -251,6 +293,7 @@ $(function(){
 		var x = getNewAppt();
 		allAppts.push(x);
 		addAppts(allAppts);
+		save();
 		$(this).prev('input').val("");
 		$(this).prev().prev('input').val("");
 		$('#appt-form').toggle('display');
@@ -262,19 +305,17 @@ $(function(){
 		var x = getNewTask();
 		allTasks.push(x);
 		addTasks(allTasks);
+		save();
 		$(this).prev('input').val("");
 		$('#task-form').toggle('display');
     });
 
-    //Clicking on date toggles display of appointments
-    $(document).on('click', "#date", function(){
-		$(this).nextAll('ul').toggle('display');
-    });
 
     //Clicking "archive appt" removes appointment UL/LI, archives appt
     $(document).on('click', "#archive-appt", function(){
 		var apptText = $(this).parent().prev().text();
 		archiveAppt(apptText);
+		save();
 		$(this).parent().parent('ul').remove();
     });
 
@@ -282,6 +323,7 @@ $(function(){
     $(document).on('click', "#archive-task", function(){
 		var taskText = $(this).parent().prev('li').text();
 		archiveTask(taskText);
+		save();
 		$(this).parent().parent('ul').remove();
     });
 
@@ -290,6 +332,7 @@ $(function(){
 		var archTaskText = $(this).parent().prev().text();
 		restoreTasks(archTaskText);
 		addTasks(allTasks);
+		save();
 		$('.archived-tasks').toggle('display');
     });
 
@@ -298,6 +341,7 @@ $(function(){
 		var archApptText = $(this).parent().prev().text().substr(-10);
 		restoreAppts(archApptText);
 		addAppts(allAppts);
+		save();
 		$('.archived-appts').toggle('display');
     });
 
