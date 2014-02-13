@@ -11,7 +11,11 @@ $(function(){
 		}
 	];
 
-	var allTasks = [];
+	var allTasks = [
+		{
+			task: "Finish Mid-Term"
+		}
+	];
 
 	var date = new Date();
 
@@ -47,7 +51,7 @@ $(function(){
 	 */
     var pushDate = function(){
 		var x = function() {
-			$("#time-bar").text(makeTime());
+			$("#time-bar").text(makeTime);
 		};
 		setInterval(x,1000);
     };
@@ -70,22 +74,42 @@ $(function(){
 		}
     };
 
-    //Creates new appointment UL with appointment info and delete button
+    //Creates new appointment UL with appointment info and archive button
     var newAppt = function(apptInst) {
-		var newApptUl = $('<ul class="new appt" id="new-appt"></ul>');
+		var newApptUl = $('<ul class="new-appt" id="new-appt"></ul>');
 		var newApptLi = $('<li>{0}</li>'.supplant([apptInst]));
-		var newDelLi = $('<li class="delete-button"><a id="delete-button" href="#">Delete Appt</a></li>');
+		var newDelLi = $('<li class="archive-appt"><a id="archive-appt" href="#">Archive Appt</a></li>');
 		var newApptEl = newApptUl.append(newApptLi, newDelLi);
 		return newApptEl;
     };
 
-    //Searches allAppts Object, pushes k/v pairs into match date
+    //Searches allAppts Object, pushes appointment value into match date
     var addAppts = function(allAppts) {
-		$('ul').remove();
+		$('.new-appt').remove();
 		for (var i = 0; i < allAppts.length; i++) {
 			var apptInst = allAppts[i].appointment;
 			if (allAppts[i].date == $('.calendar').find("[data-date='" + allAppts[i].date + "']")); {
 				$('.calendar').find("[data-date='" + allAppts[i].date + "']").append(newAppt(apptInst));
+			}
+		}
+    };
+
+    //Creates new task UL with task info and archive button
+    var newTask = function(taskInst) {
+		var newTaskUl = $('<ul class="new-task" id="new-task"></ul>');
+		var newTaskLi = $('<li>{0}</li>'.supplant([taskInst]));
+		var newDelLi = $('<li class="archive-task"><a id="archive-task" href="#">Archive</a></li>');
+		var newTaskEl = newTaskUl.append(newTaskLi, newDelLi);
+		return newTaskEl;
+    };
+
+    //Searches allTasks Object, pushes task value into match date
+    var addTasks = function(allTasks) {
+		$('.new-task').remove();
+		for (var i = 0; i < allTasks.length; i++) {
+			var taskInst = allTasks[i].task;
+			if (allTasks[i].task.substr(0,8) !== "archived") {
+				$('.task-list').append(newTask(taskInst));
 			}
 		}
     };
@@ -97,13 +121,28 @@ $(function(){
 			appointment: $('#apptbox').val()
 		};
     };
-    
+   
+    //Get Form Info
+    var getNewTask = function() {
+		return {
+			task: $('#taskbox').val(),
+		};
+    };
+
     //Archive appointments
     var archiveAppt = function(apptText) {
 		for (var i = 0; i < allAppts.length; i++) {
 			if (allAppts[i].appointment == apptText) {
 				allAppts[i].date = "archived"+allAppts[i].date;
-				console.log(allAppts[i].date);
+			}
+		}
+    };
+
+    //Archive tasks
+    var archiveTask = function(taskText) {
+		for (var i = 0; i < allTasks.length; i++) {
+			if (allTasks[i].date == taskText){
+				allTasks[i].task = "archived"+allTasks[i].task;
 			}
 		}
     };
@@ -120,11 +159,16 @@ $(function(){
 	createTwoWeek();
 
     //Clicking on + Icon Toggles Appt. Form
-    $('#add-button').click(function(){
+    $('#add-appt').click(function(){
 		$('#appt-form').toggle('display');
     });
 
-    //Clicking Submit Button stores info in allAppts array, clears form, updates DOM
+    //Clicking on + Icon Toggles Task Form
+    $('#add-task').click(function(){
+		$('#task-form').toggle('display');
+    });
+
+    //Clicking Form Submit Button stores info in allAppts array, clears form, updates DOM
     $('#submit-appt').click(function(e){
 		e.preventDefault();
 		var x = getNewAppt();
@@ -135,19 +179,36 @@ $(function(){
 		$('#appt-form').toggle('display');
     });
 
+    //Clicking Task Submit Button stores info in allTasks array, clears form, updates DOM
+    $('#submit-task').click(function(e){
+		e.preventDefault();
+		var x = getNewTask();
+		allTasks.push(x);
+		addTasks(allTasks);
+		$(this).prev('input').val("");
+		$('#task-form').toggle('display');
+    });
+
     //Clicking on date toggles display of appointments
     $(document).on('click', "#date", function(){
 		$(this).nextAll('ul').toggle('display');
     });
 
-    //Clicking "delete" removes appointment UL/LI
-    $(document).on('click', "#delete-button", function(){
+    //Clicking "archive appt" removes appointment UL/LI, archives appt
+    $(document).on('click', "#archive-appt", function(){
 		var apptText = $(this).parent().prev().text();
 		archiveAppt(apptText);
 		$(this).parent().parent('ul').remove();
     });
 
-    //Infinite scroll for calendar, adds new days, updates DOM with 
+    //Clicking "archive" removes appointment UL/LI, archives task
+    $(document).on('click', "#archive-task", function(){
+		var taskText = $(this).parent().prev().text();
+		archiveTask(taskText);
+		$(this).parent().parent('ul').remove();
+    });
+
+    //Infinite scroll for calendar, adds new days, updates DOM with appts
 	$('#calendar').on('scroll', function scrollHandler() {
 		var distanceFromBottom = $('#calendar').height() - $('#calendar').scrollTop() - $('#calendar').height();
 		if(distanceFromBottom < $('#calendar').height()) {

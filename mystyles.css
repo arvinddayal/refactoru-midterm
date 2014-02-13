@@ -6,12 +6,16 @@ h3 {
 	text-decoration: underline;
 }
 
-.calendar {
+body {
+	background-color: #E8E8E8;
+}
+
+.calendar, .tasks {
 	height: 350px;
 	overflow: scroll;
 }
 
-.appt-form {
+.appt-form, .task-form {
 	display: none;
 }
 .new-day > ul {
@@ -22,7 +26,11 @@ h3 {
 	display: inline-block;
 }
 
-.delete-button {
+.archive-appt, .archive-task {
 	float: right;
 	margin-right: 5px;
+}
+
+.new-task > li {
+	display: inline-block;
 }
