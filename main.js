@@ -13,7 +13,7 @@ $(function(){
 
 	var allTasks = [
 		{
-			task: "Finish Mid-Term"
+			task: "Mid-Term"
 		}
 	];
 
@@ -147,6 +147,35 @@ $(function(){
 		}
     };
 
+    //Creates archived tasks UL and restore button
+    var createArchivedTasks = function(archTaskInst) {
+		var archTaskUl = $('<ul class="new-task" id="new-task"></ul>');
+		var archTaskLi = $('<li>{0}</li>'.supplant([archTaskInst.substr(8)]));
+		var archResLi = $('<li class="restore-task"><a id="restore-task" href="#">Restore</a></li>');
+		var archTaskEl = archTaskUl.append(archTaskLi, archResLi);
+		return archTaskEl;
+    };
+
+    //Populates archived tasks to DOM
+    var showArchivedTasks = function(allTasks) {
+		$('.archived-tasks').empty();
+		for (var i = 0; i < allTasks.length; i++) {
+			archTaskInst = allTasks[i].task;
+			if (allTasks[i].task.substr(0,8) == "archived") {
+				$('.archived-tasks').append(createArchivedTasks(archTaskInst));
+			}
+		}
+    };
+
+    //restore archived tasks
+    var restoreTasks = function(archTaskText) {
+		for (var i = 0; i < allTasks.length; i++) {
+			if (allTasks[i].task.substr(8) == archTaskText) {
+				allTasks[i].task = allTasks[i].task.substr(8);
+			}
+		}
+    };
+
     //end variables
 
 
@@ -167,6 +196,14 @@ $(function(){
     $('#add-task').click(function(){
 		$('#task-form').toggle('display');
     });
+
+    //Clicking on "view archive" Icon Toggles Archived Tasks div
+    $('#view-archive').click(function(){
+		$('.archived-tasks').toggle('display');
+		showArchivedTasks(allTasks);
+    });
+
+
 
     //Clicking Form Submit Button stores info in allAppts array, clears form, updates DOM
     $('#submit-appt').click(function(e){
@@ -206,6 +243,14 @@ $(function(){
 		var taskText = $(this).parent().prev('li').text();
 		archiveTask(taskText);
 		$(this).parent().parent('ul').remove();
+    });
+
+    //Clicking "restore" in tasks un-archives that task
+    $(document).on('click', "#restore-task", function(){
+		var archTaskText = $(this).parent().prev().text();
+		restoreTasks(archTaskText);
+		addTasks(allTasks);
+		$('.archived-tasks').toggle('display');
     });
 
     //Infinite scroll for calendar, adds new days, updates DOM with appts
