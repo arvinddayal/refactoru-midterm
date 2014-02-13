@@ -3,15 +3,9 @@ $(function(){
 	var date = new Date();
 
 	var save = function () {
-		localStorage.setItem('allAppts', JSON.stringify(allAppts));
-		localStorage.setItem('allTasks', JSON.stringify(allTasks));
+		localStorage['allAppts'] = JSON.stringify(allAppts);
+		localStorage['allTasks'] = JSON.stringify(allTasks);
 	};
-
-	var restoreInfo = function() {
-		JSON.parse(localStorage.getItem('allAppts'));
-		JSON.parse(localStorage.getItem('allTasks'));
-	};
-
 
 	var allAppts = [
 		{
@@ -27,8 +21,16 @@ $(function(){
 	var allTasks = [
 		{
 			task: "Mid-Term"
+		},
+		{
+			task: "Learn How To Code"
 		}
 	];
+
+	var restoreAll = function() {
+		allTasks = JSON.parse(localStorage['allTasks']);
+		allAppts = JSON.parse(localStorage['allAppts']);
+	};
 
 	/**
 	 * Creates new Time
@@ -90,7 +92,6 @@ $(function(){
         jsonpCallback: 'wxCallback'
     });
     //Weather Info JS Ends Here
-
 
     //Creates new date div
     var newDate = function(date) {
@@ -244,12 +245,11 @@ $(function(){
     
     //end variables
 
-
-
-
     //Functions
+
     //Retrieve local storage
-    restoreInfo();
+    restoreAll();
+    // restoreT();
     //Pushes date into time-bar div
     pushDate();
 	//Populates first two weeks with any stored appts
@@ -309,7 +309,6 @@ $(function(){
 		$('#task-form').toggle('display');
     });
 
-
     //Clicking "archive appt" removes appointment UL/LI, archives appt
     $(document).on('click', "#archive-appt", function(){
 		var apptText = $(this).parent().prev().text();
@@ -355,19 +354,5 @@ $(function(){
 		}
 		addAppts(allAppts);
 	});
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
 
 });
