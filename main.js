@@ -92,7 +92,6 @@ $(function(){
     //Weather Info JS Ends Here
 
 
-
     //Creates new date div
     var newDate = function(date) {
 		var dayStr= date.toDateString();
