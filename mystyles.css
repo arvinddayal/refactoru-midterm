@@ -15,7 +15,7 @@ body {
 	overflow: scroll;
 }
 
-.appt-form, .task-form, .archived-tasks {
+.appt-form, .task-form, .archived-tasks, .archived-appts {
 	display: none;
 }
 .new-day > ul {
@@ -26,7 +26,7 @@ body {
 	display: inline-block;
 }
 
-.archive-appt, .archive-task, .restore-task {
+.archive-appt, .archive-task, .restore-task, .restore-appt {
 	float: right;
 	margin-right: 2px;
 }
@@ -35,8 +35,13 @@ body {
 	display: inline-block;
 }
 
+.new-appt1 > li {
+	display: inline;
+}
+
 .add-task, .add-appt{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 }
+

@@ -114,7 +114,7 @@ $(function(){
 		}
     };
 
-    //Get Form Info
+    //Get Appt Form Info
     var getNewAppt = function() {
 		return {
 			date: $('#datebox').val(),
@@ -122,7 +122,7 @@ $(function(){
 		};
     };
    
-    //Get Form Info
+    //Get Task Form Info
     var getNewTask = function() {
 		return {
 			task: $('#taskbox').val(),
@@ -176,6 +176,36 @@ $(function(){
 		}
     };
 
+    //Creates archived appts UL and restore button
+    var createArchivedAppts = function(archApptInstA, archApptInstD) {
+		var archApptUl = $('<ul class="new-appt1" id="new-appt1"></ul>');
+		var archApptLi = $('<li>{0}, {1}</li>'.supplant([archApptInstA, archApptInstD.substr(8)]));
+		var archResLi = $('<li class="restore-appt"><a id="restore-appt" href="#">Restore</a></li>');
+		var archTaskEl = archApptUl.append(archApptLi, archResLi);
+		return archTaskEl;
+    };
+
+    //Populates archived appts to DOM
+    var showArchivedAppts = function(allAppts) {
+		$('.archived-appts').empty();
+		for (var i = 0; i < allAppts.length; i++) {
+			archApptInstA = allAppts[i].appointment;
+			archApptInstD = allAppts[i].date;
+			if (allAppts[i].date.substr(0,8) == "archived") {
+				$('.archived-appts').append(createArchivedAppts(archApptInstA, archApptInstD));
+			}
+		}
+    };
+
+    //restore archived appts
+    var restoreAppts = function(archApptText) {
+		for (var i = 0; i < allAppts.length; i++) {
+			if (allAppts[i].date.substr(8) == archApptText) {
+				allAppts[i].date = allAppts[i].date.substr(8);
+			}
+		}
+    };
+    
     //end variables
 
 
@@ -185,7 +215,12 @@ $(function(){
 
     //Pushes date into time-bar div
     pushDate();
+	//Populates first two weeks with any stored appts
 	createTwoWeek();
+	//Populates any stored appts
+	addAppts(allAppts);
+	//Populates any stored tasks
+	addTasks(allTasks);
 
     //Clicking on + Icon Toggles Appt. Form
     $('#add-appt').click(function(){
@@ -197,12 +232,17 @@ $(function(){
 		$('#task-form').toggle('display');
     });
 
-    //Clicking on "view archive" Icon Toggles Archived Tasks div
-    $('#view-archive').click(function(){
+    //Clicking on "view archive" Toggles Archived Tasks div
+    $('#view-arch-tasks').click(function(){
 		$('.archived-tasks').toggle('display');
 		showArchivedTasks(allTasks);
     });
 
+    //Clicking on "view archive" Toggles Archived Appts div
+    $('#view-arch-appts').click(function(){
+		$('.archived-appts').toggle('display');
+		showArchivedAppts(allAppts);
+    });
 
 
     //Clicking Form Submit Button stores info in allAppts array, clears form, updates DOM
@@ -251,6 +291,14 @@ $(function(){
 		restoreTasks(archTaskText);
 		addTasks(allTasks);
 		$('.archived-tasks').toggle('display');
+    });
+
+    //Clicking "restore" in appts un-archives that appts
+    $(document).on('click', "#restore-appt", function() {
+		var archApptText = $(this).parent().prev().text().substr(-10);
+		restoreAppts(archApptText);
+		addAppts(allAppts);
+		$('.archived-appts').toggle('display');
     });
 
     //Infinite scroll for calendar, adds new days, updates DOM with appts
