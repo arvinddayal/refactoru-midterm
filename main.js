@@ -141,7 +141,7 @@ $(function(){
     //Archive tasks
     var archiveTask = function(taskText) {
 		for (var i = 0; i < allTasks.length; i++) {
-			if (allTasks[i].date == taskText){
+			if (allTasks[i].task == taskText){
 				allTasks[i].task = "archived"+allTasks[i].task;
 			}
 		}
@@ -203,7 +203,7 @@ $(function(){
 
     //Clicking "archive" removes appointment UL/LI, archives task
     $(document).on('click', "#archive-task", function(){
-		var taskText = $(this).parent().prev().text();
+		var taskText = $(this).parent().prev('li').text();
 		archiveTask(taskText);
 		$(this).parent().parent('ul').remove();
     });
