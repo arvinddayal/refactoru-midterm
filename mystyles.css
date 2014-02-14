@@ -1,10 +1,16 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
+
 header, h3, h4 {
 	text-align: center;
 }
 
+
 .page-header {
 	margin-top: 1em;
-	font-size: 2em;
+	font-size: 2.5em;
+	font-weight: bold;
 	border-bottom: 1pt solid #000;
 	padding-bottom: 2px;
 }
@@ -14,7 +20,18 @@ h3 {
 }
 
 body {
-	background-color: #E8E8E8;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #EBE8EB),
+		color-stop(0.86, #404040)
+		);
+	background-image: -o-linear-gradient(bottom, #EBE8EB 0%, #404040 86%);
+	background-image: -moz-linear-gradient(bottom, #EBE8EB 0%, #404040 86%);
+	background-image: -webkit-linear-gradient(bottom, #EBE8EB 0%, #404040 86%);
+	background-image: -ms-linear-gradient(bottom, #EBE8EB 0%, #404040 86%);
+	background-image: linear-gradient(to bottom, #EBE8EB 0%, #404040 86%);
 }
 
 /*Weather Widget CSS Starts Here*/
@@ -29,7 +46,7 @@ body {
 .wxIntro {
     display: inline-block;
     font: 14px/20px Arial,Verdana,sans-serif;
-    color: #666;
+    color: #333;
     vertical-align: top;
     padding-top: 9px;
 }
@@ -64,6 +81,10 @@ body {
 	overflow: scroll;
 }
 
+.second-row {
+	height: 800px;	
+}
+
 .appt-form, .task-form, .archived-tasks, .archived-appts {
 	display: none;
 }
@@ -73,6 +94,7 @@ body {
 
 .new-day > ul> li {
 	display: inline-block;
+	font-size: 14pt;
 }
 
 .archive-appt, .archive-task, .restore-task, .restore-appt {
@@ -94,7 +116,3 @@ body {
 	margin-right: auto;
 }
 /*Task and Calendar CSS Ends*/
-
-.bottom {
-	background-color: black;
-}
