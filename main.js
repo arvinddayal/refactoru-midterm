@@ -28,8 +28,10 @@ $(function(){
 	];
 
 	var restoreAll = function() {
-		allTasks = JSON.parse(localStorage['allTasks']);
-		allAppts = JSON.parse(localStorage['allAppts']);
+		if(localStorage.allTasks){
+			allTasks = JSON.parse(localStorage['allTasks']);
+			allAppts = JSON.parse(localStorage['allAppts']);
+		}
 	};
 
 	/**
